@@ -21,6 +21,14 @@ System.out.println(response.getData());
 
 ### cloudoll.Client
 
+* constructor(new Config(host, port, interval))
+
+* start()
+
+启动客户端,这是一个服务,会持续从注册中心下载服务列表。
+
+在 android 中, config 的 心跳间隔(interval)不能设置得太短, 否则耗电,耗流量
+
 * get(serviceName, uri)
 
 GET 一个远程的的结果
