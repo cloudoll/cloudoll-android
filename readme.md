@@ -23,6 +23,8 @@ System.out.println(response.getData());
 
 * constructor(new Config(host, port, interval))
 
+构造函数, 需要指定一个配置进去。
+
 * start()
 
 启动客户端,这是一个服务,会持续从注册中心下载服务列表。
