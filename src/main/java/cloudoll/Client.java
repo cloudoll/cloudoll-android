@@ -2,13 +2,6 @@ package cloudoll;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -21,7 +14,6 @@ import java.util.Random;
 public class Client {
 
     private boolean isStart = false;
-    private CloseableHttpClient httpclient = HttpClients.createDefault();
     private Config config;
 
     /**
@@ -81,16 +73,12 @@ public class Client {
     /**
      * @
      */
-    public CloudollResponse post(String serviceName, String uri, Object param) throws IOException, CloudollException {
+    public CloudollResponse post(String serviceName, String uri, Object param) throws IOException, CloudollException, Exception {
         String param_ = JSONObject.toJSONString(param);
         Host host = this.getHost(serviceName);
-        String url = "http://" + host.getHost() + ":" + host.getPort() + host.getBaseUri() + (uri.indexOf(0) == '/' ? uri : "/" + uri);
-        HttpPost httpPost = new HttpPost(url);
-        StringEntity stringEntity = new StringEntity(param_, "UTF-8");
-        stringEntity.setContentType("application/json");
-        httpPost.setEntity(stringEntity);
-        CloseableHttpResponse response = httpclient.execute(httpPost);
-        String stringResponse = EntityUtils.toString(response.getEntity());
+        String url = "http://" + host.getHost() + ":" + host.getPort() + host.getBaseUri() + (uri.startsWith("/") ? uri : "/" + uri);
+
+        String stringResponse = HttpClient.postJson(url, param_);
         CloudollResponse rtn = JSONObject.parseObject(stringResponse, CloudollResponse.class);
         if (rtn.getErrno() != 0) {
             throw new CloudollException(rtn.getErrText(), rtn.getErrno(), rtn.getService());
@@ -98,12 +86,11 @@ public class Client {
         return rtn;
     }
 
-    public CloudollResponse get(String serviceName, String uri) throws IOException, CloudollException {
+    public CloudollResponse get(String serviceName, String uri) throws IOException, CloudollException, Exception {
         Host host = this.getHost(serviceName);
-        String url = "http://" + host.getHost() + ":" + host.getPort() + host.getBaseUri() + (uri.indexOf(0) == '/' ? uri : "/" + uri);
-        HttpGet httpGet = new HttpGet(url);
-        CloseableHttpResponse response = httpclient.execute(httpGet);
-        String stringResponse = EntityUtils.toString(response.getEntity());
+        String url = "http://" + host.getHost() + ":" + host.getPort() + host.getBaseUri() + (uri.startsWith("/") ? uri : "/" + uri);
+
+        String stringResponse = HttpClient.get(url);
         CloudollResponse rtn = JSONObject.parseObject(stringResponse, CloudollResponse.class);
         if (rtn.getErrno() != 0) {
             throw new CloudollException(rtn.getErrText(), rtn.getErrno(), rtn.getService());

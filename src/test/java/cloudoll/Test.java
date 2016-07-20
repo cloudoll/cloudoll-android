@@ -12,7 +12,7 @@ public class Test {
 
     public static void main(String[] a) throws IOException, CloudollException {
 
-        Client client = new Client(new Config("127.0.0.1", 8801));
+        Client client = new Client(new Config("127.0.0.1", 8801, 60000));
         client.start();
 //        String serviceName = "mall.service.customer";
 //        String uri = "/open/cause/find-by-code?code=REFUND_CAUSE";
@@ -31,7 +31,11 @@ public class Test {
         loginInfo.put("password", "111111");
 
         CloudollResponse response = null;
-        response = client.post(service, uri, loginInfo);
+        try {
+            response = client.post(service, uri, loginInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         System.out.println(response);
 
 

@@ -1,20 +1,12 @@
 package cloudoll;
 
 import com.alibaba.fastjson.JSONObject;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
-
-import java.io.IOException;
 
 /**
  * 心跳线程
  */
 class HeartThread extends Thread {
 
-    private CloseableHttpClient httpclient = HttpClients.createDefault();
     /**
      * 配置
      */
@@ -36,7 +28,7 @@ class HeartThread extends Thread {
             } else {
                 App.addApplication(App.CLOUDOLL_CONFIG, closeableHttpResponse.getData());
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println("cloudoll 加载 config 的心跳异常 ->" + e.getMessage());
         } finally {
             try {
@@ -48,9 +40,7 @@ class HeartThread extends Thread {
         }
     }
 
-    private String getConfig(String loadConfigUrl) throws IOException {
-        HttpGet httpGet = new HttpGet(loadConfigUrl);
-        CloseableHttpResponse response = httpclient.execute(httpGet);
-        return EntityUtils.toString(response.getEntity());
+    private String getConfig(String loadConfigUrl) throws Exception {
+        return HttpClient.get(loadConfigUrl);
     }
 }
