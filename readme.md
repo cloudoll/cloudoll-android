@@ -1,5 +1,11 @@
 # cloudoll java 客户端
 
+这个类库适用于 android，没有使用 apache 的 httpclient。
+
+目前的版本使用的注册中心是 [cloudoll-server-rest](https://github.com/cloudoll/cloudoll-server-rest)
+
+android 版本的是客户端直连微服务，并未使用代理，所以部署的时候应该把微服务部署在外网。
+
 使用方法:
 
 ```java
